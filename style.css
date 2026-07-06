@@ -1,0 +1,233 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+h1 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    max-width: 900px;
+}
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    align-items: center;
+}
+
+.toolbar-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border-right: 1px solid #ddd;
+    padding-right: 15px;
+}
+
+.toolbar-section:last-child {
+    border-right: none;
+    padding-right: 0;
+}
+
+button, label {
+    padding: 10px 14px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+button:hover {
+    background-color: #f0f0f0;
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+button.active {
+    background-color: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+button.active:hover {
+    background-color: #5568d3;
+}
+
+#clearBtn {
+    background-color: #ff6b6b;
+    color: white;
+    border-color: #ff6b6b;
+}
+
+#clearBtn:hover {
+    background-color: #ff5252;
+    border-color: #ff5252;
+}
+
+#sendBtn {
+    background-color: #51cf66;
+    color: white;
+    border-color: #51cf66;
+}
+
+#sendBtn:hover {
+    background-color: #40c057;
+    border-color: #40c057;
+}
+
+#undoBtn {
+    background-color: #4dabf7;
+    color: white;
+    border-color: #4dabf7;
+}
+
+#undoBtn:hover {
+    background-color: #339af0;
+    border-color: #339af0;
+}
+
+canvas {
+    border: 3px solid #333;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    cursor: crosshair;
+    display: block;
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+}
+
+.checkbox-container {
+    font-size: 14px;
+    user-select: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.checkbox-container:hover {
+    background-color: #f0f0f0;
+    border-color: #667eea;
+}
+
+.checkbox-container input {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+input[type="color"] {
+    width: 50px;
+    height: 44px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+input[type="color"]:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+input[type="range"] {
+    width: 120px;
+    cursor: pointer;
+}
+
+.size-display {
+    min-width: 35px;
+    font-weight: bold;
+    color: #667eea;
+    font-size: 14px;
+}
+
+label[for="sizeSlider"] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    user-select: none;
+}
+
+.mode-indicator {
+    font-size: 13px;
+    color: #666;
+    background: #e9ecef;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.footer {
+    color: white;
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+#gameUrl {
+    width: 320px;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+}
+
+@media (max-width: 760px) {
+    #gameUrl { width: 100%; }
+}
+
+/* Brush selector styling */
+#brushSelect {
+    padding: 8px 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 14px;
+}
+
+@media (max-width: 760px) {
+    #brushSelect { width: 100%; }
+}
