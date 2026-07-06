@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 HarmonyArt Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 900px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            align-items: center;
+        }
+
+        .toolbar-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-right: 1px solid #ddd;
+            padding-right: 15px;
+        }
+
+        .toolbar-section:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        button, label {
+            padding: 10px 14px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background-color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #f0f0f0;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        button.active {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        button.active:hover {
+            background-color: #5568d3;
+        }
+
+        #clearBtn {
+            background-color: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+
+        #clearBtn:hover {
+            background-color: #ff5252;
+            border-color: #ff5252;
+        }
+
+        #sendBtn {
+            background-color: #51cf66;
+            color: white;
+            border-color: #51cf66;
+        }
+
+        #sendBtn:hover {
+            background-color: #40c057;
+            border-color: #40c057;
+        }
+
+        #undoBtn {
+            background-color: #4dabf7;
+            color: white;
+            border-color: #4dabf7;
+        }
+
+        #undoBtn:hover {
+            background-color: #339af0;
+            border-color: #339af0;
+        }
+
+        canvas {
+            border: 3px solid #333;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            cursor: crosshair;
+            display: block;
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+        }
+
+        .checkbox-container {
+            font-size: 14px;
+            user-select: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container:hover {
+            background-color: #f0f0f0;
+            border-color: #667eea;
+        }
+
+        .checkbox-container input {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        input[type="color"] {
+            width: 50px;
+            height: 44px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="color"]:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        input[type="range"] {
+            width: 120px;
+            cursor: pointer;
+        }
+
+        .size-display {
+            min-width: 35px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        label[for="sizeSlider"] {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background-color: #fff;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .mode-indicator {
+            font-size: 13px;
+            color: #666;
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .footer {
+            color: white;
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 HarmonyArt Canvas</h1>
+
+    <div class="container">
+        <div class="toolbar">
+            <!-- Tool Selection -->
+            <div class="toolbar-section">
+                <button id="tool-brush" class="active" onclick="setTool('brush')">🖌️ Brush</button>
+                <button id="tool-pencil" onclick="setTool('pencil')">✏️ Pencil</button>
+                <button id="tool-rect" onclick="setTool('rect')">⬜ Rectangle</button>
+                <button id="tool-circle" onclick="setTool('circle')">⭕ Circle</button>
+            </div>
+
+            <!-- Shape Options -->
+            <div class="toolbar-section">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="fillCheck"> Fill
+                </label>
+            </div>
+
+            <!-- Styling Options -->
+            <div class="toolbar-section">
+                <input type="color" id="colorPicker" value="#000000" title="Choose Color">
+                <label for="sizeSlider" style="border: none; padding: 0; background: none;">
+                    Size:
+                    <input type="range" id="sizeSlider" min="1" max="30" value="5" title="Adjust Size">
+                    <span class="size-display" id="sizeDisplay">5</span>px
+                </label>
+            </div>
+
+            <!-- Actions -->
+            <div class="toolbar-section">
+                <button id="undoBtn" onclick="undoLastStroke()">↶ Undo</button>
+                <button id="clearBtn" onclick="clearCanvas()">🗑️ Clear</button>
+                <button id="sendBtn" onclick="sendToGame()">🎮 Export</button>
+            </div>
+        </div>
+
+        <canvas id="paintCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <div class="footer">
+        <p>Draw freely with multiple brush styles | Export your artwork as PNG</p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('paintCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let isDrawing = false;
+        let startX, startY;
+        let currentTool = 'brush';
+        let snapshot;
+        let history = [];
+
+        // Update size display
+        document.getElementById('sizeSlider').addEventListener('input', (e) => {
+            document.getElementById('sizeDisplay').textContent = e.target.value;
+        });
+
+        // Save canvas state to history
+        function saveToHistory() {
+            history.push(canvas.toDataURL());
+            // Limit history to 20 states
+            if (history.length > 20) {
+                history.shift();
+            }
+        }
+
+        // Undo last stroke
+        function undoLastStroke() {
+            if (history.length > 0) {
+                const previousState = history.pop();
+                const img = new Image();
+                img.src = previousState;
+                img.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        }
+
+        // Mouse Down Event
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            saveToHistory();
+            
+            const rect = canvas.getBoundingClientRect();
+            startX = e.clientX - rect.left;
+            startY = e.clientY - rect.top;
+            
+            ctx.beginPath();
+            ctx.strokeStyle = document.getElementById('colorPicker').value;
+            ctx.fillStyle = document.getElementById('colorPicker').value;
+            ctx.lineWidth = document.getElementById('sizeSlider').value;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            if (currentTool === 'brush') {
+                ctx.globalAlpha = 1;
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(startX, startY);
+                ctx.stroke();
+            } else if (currentTool === 'pencil') {
+                ctx.globalAlpha = 0.8;
+                ctx.lineWidth = Math.max(1, ctx.lineWidth * 0.6);
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(startX, startY);
+                ctx.stroke();
+            } else {
+                // Save canvas state for shape preview
+                snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            }
+        });
+
+        // Mouse Move Event
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+
+            if (currentTool === 'brush') {
+                ctx.globalAlpha = 1;
+                ctx.lineTo(currentX, currentY);
+                ctx.stroke();
+            } else if (currentTool === 'pencil') {
+                ctx.globalAlpha = 0.8;
+                ctx.lineTo(currentX, currentY);
+                ctx.stroke();
+            } else {
+                // Restore frame before drawing preview shape
+                ctx.putImageData(snapshot, 0, 0);
+                drawShape(currentX, currentY);
+            }
+        });
+
+        // Mouse Up Event
+        canvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+            ctx.globalAlpha = 1;
+        });
+
+        // Mouse Leave Event
+        canvas.addEventListener('mouseleave', () => {
+            isDrawing = false;
+            ctx.globalAlpha = 1;
+        });
+
+        // Drawing Helper for Shapes
+        function drawShape(endX, endY) {
+            const isFilled = document.getElementById('fillCheck').checked;
+            ctx.beginPath();
+
+            if (currentTool === 'rect') {
+                const width = endX - startX;
+                const height = endY - startY;
+                if (isFilled) {
+                    ctx.fillRect(startX, startY, width, height);
+                } else {
+                    ctx.strokeRect(startX, startY, width, height);
+                }
+            } else if (currentTool === 'circle') {
+                const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+                if (isFilled) {
+                    ctx.fill();
+                }
+                ctx.stroke();
+            }
+        }
+
+        // Toolbar Configuration Functions
+        function setTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.toolbar button').forEach(btn => {
+                if(btn.id !== 'clearBtn' && btn.id !== 'sendBtn' && btn.id !== 'undoBtn') {
+                    btn.classList.remove('active');
+                }
+            });
+            document.getElementById(`tool-${tool}`).classList.add('active');
+        }
+
+        function clearCanvas() {
+            if (confirm('Are you sure you want to clear the canvas?')) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                history = [];
+            }
+        }
+
+        function sendToGame() {
+            // Convert canvas to an image data URL string
+            const dataURL = canvas.toDataURL('image/png');
+            
+            // Create a download link
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = 'harmony-art-' + new Date().getTime() + '.png';
+            link.click();
+            
+            alert('✅ Canvas exported successfully!\n\nYour artwork has been downloaded as PNG.');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'z') {
+                undoLastStroke();
+            }
+        });
+    </script>
+</body>
+</html>
